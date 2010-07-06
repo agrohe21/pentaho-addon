@@ -2,7 +2,7 @@
  * @author Andy
  */
 
-Pentaho.location = {
+pentaho.location = {
 	app: "/" + window.location.pathname.split( '/' )[1],
 	args: function() {
 		//get query string without the initial ?
