@@ -84,7 +84,9 @@ pentaho.pmd = {
 								models[i].domain = xmlDoc.getElementsByTagName('domain_id')[i].firstChild.nodeValue;
 								models[i].model = xmlDoc.getElementsByTagName('model_id')[i].firstChild.nodeValue;
 								models[i].name = xmlDoc.getElementsByTagName('model_name')[i].firstChild.nodeValue;
-								models[i].description = xmlDoc.getElementsByTagName('model_description')[i].firstChild.nodeValue;
+								if (xmlDoc.getElementsByTagName('model_description')[i]) {
+									models[i].description = xmlDoc.getElementsByTagName('model_description')[i].firstChild.nodeValue;
+								}
 								pentaho.pmd.businessModels[i] = new pentaho.pmd.BusinessModel(models[i]);
 						}
 						//call success function if there is one
@@ -136,15 +138,16 @@ pentaho.pmd.BusinessModel.prototype.discoverViews = function(oConfig) {
 					
 					//loop through all column in this view
 		           	for (var j=0,x=cols.length; j<x; j++) {
-		           		views[i].columns[j] = {
-		           			view: views[i].view,
-			           		column: view.getElementsByTagName('column_id')[j].firstChild.nodeValue,
-			           		"name": view.getElementsByTagName('column_name')[j].firstChild.nodeValue,
-			           		description:view.getElementsByTagName('column_description')[j].firstChild.nodeValue,
-			           		"type":     view.getElementsByTagName('column_type')[j].firstChild.nodeValue,
-			           		field_type: view.getElementsByTagName('column_field_type')[j].firstChild.nodeValue
-		           		}
-		           	}
+		           		views[i].columns[j] = {};
+						views[i].columns[j].view   = views[i].view;
+			           	views[i].columns[j].column = view.getElementsByTagName('column_id')[j].firstChild.nodeValue;
+			           	views[i].columns[j].name   = view.getElementsByTagName('column_name')[j].firstChild.nodeValue;
+			           	views[i].columns[j].description = view.getElementsByTagName('column_description')[j].firstChild.nodeValue;
+			           	views[i].columns[j].type        = view.getElementsByTagName('column_type')[j].firstChild.nodeValue;
+						if (view.getElementsByTagName('column_field_type')[j]) {
+							views[i].columns[j].field_type = view.getElementsByTagName('column_field_type')[j].firstChild.nodeValue;
+						}
+					}
 					that.views[i] = new pentaho.pmd.BusinessView(views[i]);
 				}
 				//invoke callback method if one was provided
@@ -153,8 +156,9 @@ pentaho.pmd.BusinessModel.prototype.discoverViews = function(oConfig) {
 				} else {
 					throw new Error( "Unrecognized callback function to BusinessView.discoverViews" ); 
 				}
-		}  //end xhr
-	})
+		}  //end complete
+	} //end xhr.execute
+	)
 } //end getView
 
 //Instance method to find a specific BusinessColumn in the BusinessView(s() based on view and column strings.
@@ -524,7 +528,7 @@ pentaho.xhr = {
 				}
 			}
 			
-			return oResults;
+			return oResults; //comment
 		},
 		/*
 		@method parseXML
