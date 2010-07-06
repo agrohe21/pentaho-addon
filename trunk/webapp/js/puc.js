@@ -1,8 +1,8 @@
 /**
  * @author Andy
  */
-if (!Pentaho.PUC) {
-	Pentaho.PUC = {
+if (!pentaho.PUC) {
+	pentaho.PUC = {
 		enabled: (window.parent != null && window.parent.mantle_initialized == true),
 		refreshBrowsePanel: function(){
 			// if possible refresh the solution browser panel
