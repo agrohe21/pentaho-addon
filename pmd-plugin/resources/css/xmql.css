@@ -1,0 +1,17 @@
+/* align contents of the banner to the left */
+/* Align the model select to left and near the bottom of the banner */
+#editPane {
+	display:none;
+}
+
+#hd {
+	text-align:center;
+}
+
+#mqlLeft {
+	display: none;
+}
+
+.banner {
+	text-align: left;
+}

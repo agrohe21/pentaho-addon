@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin title="Metadata Query">
+
+    <menu-items>
+		<menu-item id="new-pmd-plugin" anchor="file-new-submenu" label="Metadata Query" command="content/pmd-plugin/resources/xmql.html?command=new" type="MENU_ITEM" how="LAST_CHILD"/>
+        <menu-item id="pmd-plugin" anchor="view-submenu" label="New Metadata Query" command="content/pmd-plugin/resources/xmql.html?command=new" type="MENU_ITEM" how="LAST_CHILD"/>
+        <menu-item id="pmd-plugin" anchor="view-submenu" label="Load Metadata Query" command="content/pmd-plugin/resources/xmql.html?command=load" type="MENU_ITEM" how="LAST_CHILD"/>
+        <menu-item id="load-pmd-plugin" anchor="file-submenu" label="Load Metadata Query" command="content/pmd-plugin/resources/xmql.html?command=load" type="MENU_ITEM" how="LAST_CHILD"/>
+    </menu-items>
+
+    <static-paths>
+        <static-path url="/pmd-plugin/resources" localFolder="resources"/>
+    </static-paths> 
+
+
+</plugin>
