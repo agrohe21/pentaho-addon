@@ -46,7 +46,7 @@ pentaho.pmd = {
 		//class function to return a pentaho.pmd.BusinessModel based on a model_id only
 		findModel: function(model_id) {
 			for (var i=0,x=pentaho.pmd.businessModels.length; i<x; i++) {
-				if (pentaho.pmd.businessModels[i].model == model_id){
+				if (pentaho.pmd.businessModels[i].model == model_id || pentaho.pmd.businessModels[i].name == model_id){
 					return pentaho.pmd.businessModels[i];
 				}
 
@@ -60,6 +60,7 @@ pentaho.pmd = {
 		discoverModels: function(oConfig){
 			//If we already have some models in the class variable, return early with those values
 			if (pentaho.pmd.businessModels.length > 0) {
+				console.log("Using Existing Models");
 				oConfig.success(pentaho.pmd.businessModels);
 			}
 			else {
@@ -211,7 +212,8 @@ pentaho.pmd.BusinessColumn = function(oColumn) {
 	this.type        = oColumn.type;
 }
 
-//TODO add getDisctinctVaues to BusinessColumn object
+pentaho.pmd.BusinessColumn.prototype.getDistinctValues = function() {
+}
 
 /*
  * 
@@ -296,7 +298,7 @@ pentaho.pmd.Query = function(json){
 	this.domain = json.domain || "Unknown Domain";
 	this.distinct = json.distinct || false; 
 	this.MDselect = json.MDselect || []; //holds an array of column objects to be included in query
-	this.MDorder   = json.MDorder || [], //holds an array of column objects to be used for sorting
+	this.MDorder   = json.MDorder || []; //holds an array of column objects to be used for sorting
 	this.MDfilter  = json.MDfilter || []; //holds an array of filters to be used in the MQL query
 }
 
@@ -404,7 +406,7 @@ pentaho.pmd.Query.prototype = {
 		if (this.MDselect.length == 0) {
 			return;
 		} else {
-			//Calls ServiceAction for system/DataAction/mqlQuery.xaction
+			//Calls ServiceAction for system/pmd-plugin/mqlQuery.xaction
 			//This will hopefully be changed in the future when Pentaho creates a web service
 			pentaho.xhr.execute("/pentaho/ServiceAction", {
 				asysnc:   true,
@@ -428,7 +430,7 @@ pentaho.pmd.Query.prototype = {
 				data:{
 					auditname:"xmql",  //this goes into the PRO_AUDIT table
 					solution :"system",
-					path     :"DataAction",
+					path     :"pmd-plugin",
 					action   :"mqlQuery.xaction",
 					resultset:"query_result",
 					domain   :this.domain,

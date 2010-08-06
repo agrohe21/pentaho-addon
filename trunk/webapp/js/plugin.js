@@ -27,31 +27,35 @@ RepositoryBrowserControllerProxy.prototype.pluginSave = function(oSave){
 	return;
 }
 
-// this is a required object
+/* this is a required object per Pentaho */
 function WaqrProxy() {
     this.wiz = new Wiz();
     this.repositoryBrowserController = new RepositoryBrowserControllerProxy();
 }
 
-function PentahoPlugin(filetype) {
+/* Class to embody plugin functions */
+pentaho.Plugin = function(filetype) {
 	this.filetype = filetype;
 	this.editing  = false;
 }
 
-PentahoPlugin.prototype.init = function(oConfig) {
-	var command = Pentaho.location.args.command;
+pentaho.Plugin.prototype.init = function(oConfig) {
+	var command = pentaho.location.args.command || 'new';
 	var that = this;
 	this.editing = (command == 'edit' || command == 'new');
 	
-	//console.log("PUC.enabled: " + Pentaho.PUC.enabled);
-	if (Pentaho.PUC.enabled) { //PUC enabled
+	//console.log("PUC.enabled: " + pentaho.PUC.enabled);
+	//console.log("editiing: " + this.editing);
+	if (pentaho.PUC.enabled) { //PUC enabled
 		gCtrlr = new WaqrProxy(); // this is a required variable
 		//subscribe to the save event and allow instances of plugin to override the method
-		gCtrlr.repositoryBrowserController.pluginSave =	function() {
-				var state = that.getCurrentPluginState();
-				document.body.insertBefore( prettyPrint(state, {maxDepth:10}), document.body.lastChild );
+		gCtrlr.repositoryBrowserController.pluginSave =	function(oSave) {
+				var state = that.getCurrentPluginState(oSave);
+				console.log(state);
 				that.savePluginState(state);
-				oConfig.saveComplete(data);
+				if (typeof oConfig.saveComplete == 'function') {
+					oConfig.saveComplete(oSave);
+				}
 			}
 	
 		if (window.parent.enableContentEdit) {
@@ -64,33 +68,37 @@ PentahoPlugin.prototype.init = function(oConfig) {
 	      });
 		
 	    //console.log("enabling save: " + window.parent.enableAdhocSave);
-	    if (Pentaho.PUC.enabled && window.parent.enableAdhocSave ) {
+	    if (pentaho.PUC.enabled && window.parent.enableAdhocSave ) {
 	        window.parent.enableAdhocSave( true );
 	    }
 		
 	} //end if PUC.enabled
 	
 	
-	//if ( command == 'edit' || command == 'load') {
-	//Load saved state if anything other than new
-	//even if command is not supplied, the default is to load if not new
-	if ( command != 'new') {
-		/*
-		solution = Pentaho.args.solution,
-		path     = Pentaho.args.path,
-		filename = Pentaho.args.filename;
+	if ( command == 'edit' || command == 'load') {
+		/* Load saved state if anything other than new */
+		//if ( command != 'new') {
+	
+		var solution = pentaho.location.args.solution,
+		path     = pentaho.location.args.path,
+		filename = pentaho.location.args.filename;
 		
 		if (path != '/') {
 			path += '/';
 		}
-		*/
-		Pentaho.xhr.execJSON(
-			'state.json',
-			function(state) {
-				//document.body.appendChild(prettyPrint(state, { maxDepth:10 } ));
-				oConfig.pluginLoadStateComplete(state);
+		var state = {
+			model:{
+				domain:"steel-wheels",
+				model:"BV_INVENTORY",
+				name:"Inventory",
+				description:"Inventory Metadata Model"
+			},
+			query:{
+				MDselect:[new pentaho.pmd.MDselect({column:"BC_PRODUCTS_PRODUCTCODE", table:"CAT_PRODUCTS"})]
 			}
-		); //end ajax
+			};
+		//do something like read the state from the server
+		oConfig.pluginLoadStateComplete(state);
 		
 	}
 	oConfig.pluginInitComplete();
@@ -98,23 +106,23 @@ PentahoPlugin.prototype.init = function(oConfig) {
 
 } //end init
 
-PentahoPlugin.prototype.startEditMode = function(editing, oConfig) {
+pentaho.Plugin.prototype.startEditMode = function(editing, oConfig) {
 	//console.log("startEditMode: " + editing + ":" + this.editing);
-	Pentaho.PUC.toggleEditButton(editing);
-	editing == true ? oConfig.pluginEditStart() : oConfig.pluginEditComplete();
+	pentaho.PUC.toggleEditButton(editing);
+	this.editing == true ? oConfig.pluginEditStart() : oConfig.pluginEditComplete();
 	this.editing = !this.editing;
 }
 
-PentahoPlugin.prototype.getCurrentPluginState = function() {
+pentaho.Plugin.prototype.getCurrentPluginState = function() {
 	return {
 		filetype:this.filetype
 	}
 }
 
-PentahoPlugin.prototype.savePluginState = function(oState) {
+pentaho.Plugin.prototype.savePluginState = function(oState) {
 	//document.body.appendChild(prettyPrint(oState, { maxDepth:10 } ));	
 	//TODO do somethings here like actually call the webservice when available.
 	
 	//enable refresh after the real webservice saves
-	//Pentaho.app.refreshBrowsePanel();
+	//pentaho.app.refreshBrowsePanel();
 }
