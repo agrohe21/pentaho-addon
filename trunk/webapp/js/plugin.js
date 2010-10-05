@@ -1,3 +1,7 @@
+/*
+requires: pentaho.location, pentaho.PUC
+*/
+
 // The following code is for Save/Save As functionality
 var gCtrlr;
 
@@ -36,12 +40,7 @@ function WaqrProxy() {
 /* Class to embody plugin functions */
 pentaho.Plugin = function(filetype) {
 	this.filetype = filetype;
-	this.editing  = false;
-}
-
-pentaho.Plugin.prototype.init = function(oConfig) {
 	var command = pentaho.location.args.command || 'new';
-	var that = this;
 	this.editing = (command == 'edit' || command == 'new');
 	
 	//console.log("PUC.enabled: " + pentaho.PUC.enabled);
@@ -50,27 +49,8 @@ pentaho.Plugin.prototype.init = function(oConfig) {
 		gCtrlr = new WaqrProxy(); // this is a required variable
 		//subscribe to the save event and allow instances of plugin to override the method
 		gCtrlr.repositoryBrowserController.pluginSave =	function(oSave) {
-				var state = that.getCurrentPluginState(oSave);
-				console.log(state);
-				that.savePluginState(state);
-				if (typeof oConfig.saveComplete == 'function') {
-					oConfig.saveComplete(oSave);
-				}
+				this.savePluginState(oSave);
 			}
-	
-		if (window.parent.enableContentEdit) {
-			window.parent.enableContentEdit(true);
-		}
-	      window.parent.registerContentCallback(new function() {
-	        this.editContentToggled = function(selected) {
-				that.startEditMode(that.editing, oConfig);
-	        }
-	      });
-		
-	    //console.log("enabling save: " + window.parent.enableAdhocSave);
-	    if (pentaho.PUC.enabled && window.parent.enableAdhocSave ) {
-	        window.parent.enableAdhocSave( true );
-	    }
 		
 	} //end if PUC.enabled
 	
@@ -105,7 +85,11 @@ pentaho.Plugin.prototype.init = function(oConfig) {
 	this.startEditMode(this.editing, oConfig);
 
 } //end init
-
+pentaho.Plugin.prototype.enableEditMode = function() {
+	if (window.parent.enableContentEdit) {
+		window.parent.enableContentEdit(true);
+	}
+}
 pentaho.Plugin.prototype.startEditMode = function(editing, oConfig) {
 	//console.log("startEditMode: " + editing + ":" + this.editing);
 	pentaho.PUC.toggleEditButton(editing);
