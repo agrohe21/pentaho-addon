@@ -7,7 +7,7 @@
 
 /* pentaho namespace as a holder of pmd module
 */
-var pentaho = pentaho || {}
+var pentaho = pentaho || {};
 
 /*
 pentaho.pmd provides a JavaScript API for Pentaho's Metadata services.
