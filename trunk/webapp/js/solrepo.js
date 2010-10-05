@@ -34,8 +34,8 @@ pentaho.solRepo = {
 	Solution: function(obj) {
 		this.id          = obj.id   || 'Unknown Solution';
 		this.name        = obj.name || 'Unknown Name';
-		this.date        = obj.date;
-		this.description = obj.description;
+		this.date        = obj.date || 'Unknown Date';
+		this.description = obj.description || 'Unknown Descr';
 		this.type        = "solution";
 		this.directories = [];
 		//if directories were provided in the model, then create pmd.BusinessView(s)
@@ -214,7 +214,7 @@ pentaho.solRepo.Action.prototype = {
 					data[parm] = oConfig.parameters[i][parm];
 				}
 			}
-			pentaho.print(data);
+			//pentaho.print(data);
 	
 			pentaho.xhr.execute("/pentaho/ServiceAction", {
 				asysnc:   true,
@@ -240,6 +240,38 @@ pentaho.solRepo.Action.prototype = {
 					//TODO do somethign useful with the error
 				}
 			});
-	} // end execute
+	}, // end execute
+	load: function(func) {
+		var that = this;
+		$.get({
+			url: '/persevere/xmql/',
+			data: {
+				solution :that.getSolution(),
+				path     :that.getPath(),
+				action   :that.id
+			}
+		});
+	},
+	save: function(func) {
+		var that =this;
+			$.ajax({
+			  type: 'POST',
+			  url: '/persevere/xmql',
+			  data: $.toJSON({
+				solution :that.getSolution(),
+				path     :that.getPath(),
+				action   :that.id
+				}),
+			  success: function(data) {
+				if (typeof func == 'function') {
+					that.id = data.id.split("/")[1];
+					func(data);
+				}
+			},
+			dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+			  processData:'false'
+			});
 
+	} //end save
 }
