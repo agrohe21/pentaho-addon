@@ -33,17 +33,31 @@
 		<div id="filterDialog" style="display:none"></div>
 	<div>
     <script type="text/javascript" src="/pentaho/js/pentaho-ajax.js"></script>
+    <script type="text/javascript" src="/pentaho/js/xhr.js"></script>
     <script type="text/javascript" src="/pentaho/js/pmd.js"></script>
-	<script type="text/javascript" src="/pentaho/js/location.js"></script>
-	<script type="text/javascript" src="/pentaho/js/puc.js"></script>
-    <script type="text/javascript" src="/pentaho/js/plugin.js"></script>
-    <script type="text/javascript" src="/pentaho/js/prettyprint.js"></script>
+	<!-- <script type="text/javascript" src="/pentaho/js/location.js"></script>
+	<script type="text/javascript" src="/pentaho/js/puc.js"></script> 
+    <script type="text/javascript" src="/pentaho/js/plugin.js"></script> 
+    <script type="text/javascript" src="/pentaho/js/prettyprint.js"></script> -->
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/jquery.ui.js"></script>
-	<script type="text/javascript" src="js/xmql.js"></script>
+	<script type="text/javascript" src="js/prb.js"></script>
+	<script type="text/javascript" src="/pentaho/js/oop.js"></script>
+	<script type="text/javascript" src="/pentaho/js/app.js"></script>
 	<script type="text/javascript">
 		$(document).ready( function(){
-			pentaho.xmql.init();
+			pentaho.xmql = new pentaho.app();
+			pentaho.xmql.register('pmd-model-select', pentaho.prb.ModelSelector)
+			pentaho.xmql.start('pmd-model-select', {element:$("#modelSelect")});
+			
+			
+			/*
+			pentaho.xmql.register('pmd-query', pentaho.pmd.query )
+			pentaho.xmql.register('pmd-model', )
+			pentaho.xmql.register('pmd-table', )
+			pentaho.xmql.register('pmd-field-select', )
+			pentaho.xmql.register('pmd-edit-pane', )
+			pentaho.xmql.register('puc', ) */
 		});		
 	</script>
 </body>
