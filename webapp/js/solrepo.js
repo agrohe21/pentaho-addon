@@ -200,6 +200,16 @@ pentaho.solRepo.Action.prototype = {
 		//console.log(path.join("/"));
 		return path.join("/");
 	}, //end getPath
+	discoverDetails: function(oConfig) {
+		var that = this,
+		data = { //default set of parms
+			solution :this.getSolution(),
+			path     :this.getPath(),
+			name     :this.id,
+			action   :this.id
+		};
+		//not complete but could be useful
+	}, //end discoverDetails
 	execute: function(oConfig){
 			var that = this, data ={ //default set of parms
 					auditname:"jsapi.action",  //this goes into the PRO_AUDIT table
