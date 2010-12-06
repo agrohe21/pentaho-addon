@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin title="Pentaho Report Builder">
+
+	<overlays>
+		<overlay id="startup.prb" resourcebundle="../content/prb-plugin/resources/prbplugin.properties">
+			<overlay id="startup.prb">
+				<toolbar id="mainToolbar">
+					<toolbarbutton id="openPrb" image="content/prb-plugin/resources/prb-menu-icon.gif"
+						onclick="mainToolbarHandler.openUrl('Pentaho Report Builder','Report Builder','content/prb-plugin/resources/new.html')"
+						tooltiptext="${prb-plugin.tooltip}" insertafter="newAnalysisButton" />
+				</toolbar>
+			</overlay>
+		</overlay>
+	</overlays>
+
+	<content-types>
+		<content-type type="prb" mime-type="text/html">
+			<title>Report Builder</title>
+			<description>Pentaho Report Builder</description>
+			<icon-url>content/prb-plugin/resources/prbFileType.png</icon-url>
+			<operations>
+				<operation>
+					<id>RUN</id>
+					<command>content/prb-plugin/resources/run.html?solution={solution}&amp;path={path}&amp;file={name}</command>
+				</operation>
+				<operation>
+					<id>EDIT</id>
+					<command>content/prb-plugin/resources/edit.html?solution={solution}&amp;path={path}&amp;file={name}</command>
+				</operation>
+				<operation>
+					<id>NEWWINDOW</id>
+					<command>content/prb-plugin/resources/run.html?solution={solution}&amp;path={path}&amp;file={name}</command>
+				</operation>
+			</operations>
+		</content-type> 
+	</content-types>
+
+    <menu-items>
+		<menu-item id="new-prb-plugin" anchor="file-new-submenu" label="Report Builder" command="content/prb-plugin/resources/new.html" type="MENU_ITEM" how="LAST_CHILD"/>
+    </menu-items>
+
+    <static-paths>
+        <static-path url="/prb-plugin/resources" localFolder="resources"/>
+    </static-paths> 
+
+
+</plugin>

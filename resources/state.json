@@ -1,0 +1,17 @@
+{"model":{
+	"domain":"steel-wheels",
+	"model":"BV_INVENTORY",
+	"name":"Inventory",
+	"description":"This model contains information about products and product inventory.",
+	"MDviews":[{"view":"CAT_PRODUCTS","name":"Products","description":"This category contains information about current products.",
+		"MDcolumns":[
+			{"view":"CAT_PRODUCTS", "column":"BC_PRODUCTS_PRODUCTCODE","name":"Product Code","description":"BC_PRODUCTS_PRODUCTCODE","field_type":"!FieldType.USER_ATTRIBUTE_DESC!","type":"String"},
+			{"view":"CAT_PRODUCTS", "column":"BC_PRODUCTS_PRODUCTNAME","name":"Product Name","description":"BC_PRODUCTS_PRODUCTNAME","field_type":"!FieldType.USER_DIMENSION_DESC!","type":"String"},{"column":"BC_PRODUCTS_PRODUCTLINE","name":"Product Line","description":"BC_PRODUCTS_PRODUCTLINE","field_type":"!FieldType.USER_DIMENSION_DESC!","type":"String"},{"column":"BC_PRODUCTS_PRODUCTSCALE","name":"Product Scale","description":"BC_PRODUCTS_PRODUCTSCALE","field_type":"!FieldType.USER_ATTRIBUTE_DESC!","type":"String"},{"column":"BC_PRODUCTS_PRODUCTVENDOR","name":"Product Vendor","description":"BC_PRODUCTS_PRODUCTVENDOR","field_type":"!FieldType.USER_DIMENSION_DESC!","type":"String"},{"column":"BC_PRODUCTS_PRODUCTDESCRIPTION","name":"Product Description","description":"BC_PRODUCTS_PRODUCTDESCRIPTION","field_type":"!FieldType.USER_ATTRIBUTE_DESC!","type":"String"}]},{"view":"CAT_INVENTORY","name":"Inventory and Cost","description":"This category contains details on product costs, MSRP and quantity in stock.","MDcolumns":[{"column":"BC_PRODUCTS_QUANTITYINSTOCK","name":"Quantity In Stock","description":"BC_PRODUCTS_QUANTITYINSTOCK","field_type":"!FieldType.USER_FACT_DESC!","type":"Numeric"},{"column":"BC_PRODUCTS_BUYPRICE","name":"Buy Price","description":"BC_PRODUCTS_BUYPRICE","field_type":"!FieldType.USER_FACT_DESC!","type":"Numeric"},{"column":"BC_PRODUCTS_MSRP","name":"MSRP","description":"BC_PRODUCTS_MSRP","field_type":"!FieldType.USER_FACT_DESC!","type":"Numeric"}]}],"jQuery1258914770416":11},
+			"select":[
+				{"view":"CAT_PRODUCTS","column":"BC_PRODUCTS_PRODUCTCODE","name":"Product Code","description":"BC_PRODUCTS_PRODUCTCODE","field_type":"!FieldType.USER_ATTRIBUTE_DESC!", "type":"String","checked":true},
+				{"view":"CAT_PRODUCTS","column":"BC_PRODUCTS_PRODUCTNAME","name":"Product Name","description":"BC_PRODUCTS_PRODUCTNAME","field_type":"!FieldType.USER_DIMENSION_DESC!","type":"String","checked":true}
+			],
+			"filter":[],
+			"order":[
+				{"view":"CAT_PRODUCTS","column":"BC_PRODUCTS_PRODUCTNAME","name":"Product Name","description":"BC_PRODUCTS_PRODUCTNAME","field_type":"!FieldType.USER_DIMENSION_DESC!","type":"String","checked":true}
+			]}

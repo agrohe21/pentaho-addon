@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Sample Metadata Application</title>
+    <style>body{visibility: visible;}</style>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/pentaho-style/favicon.ico" />
+    <!-- load the pentaho styling.  Try to use those if possible for consistency -->
+    <link rel="stylesheet" type="text/css" href="/pentaho-style/styles-new.css" />
+    <!-- load the mqlsample specific styling.  Make your changes there -->
+    <link rel="stylesheet" type="text/css" href="css/prb.css" />
+    <link rel="stylesheet" type="text/css" href="css/ui.all.css" />
+    <link rel="stylesheet" type="text/css" href="css/table_jqui.css" />
+
+</head>
+
+<body class="body">
+	<div id="mqlContent">
+		<div id="object_select"></div>
+		<div id="object_text"></div>
+		<div id="queryResult"></div>
+		<div id="filterDialog" style="display:none"></div>
+	<div>
+    <script type="text/javascript" src="/pentaho/js/pentaho-ajax.js"></script>
+    <script type="text/javascript" src="/pentaho/js/xhr.js"></script>
+    <script type="text/javascript" src="/pentaho/js/pmd.js"></script>
+	<!--
+    <script type="text/javascript" src="/pentaho/js/plugin.js"></script> 
+    <script type="text/javascript" src="/pentaho/js/prettyprint.js"></script>
+	-->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.ui.js"></script>
+	<script type="text/javascript" src="/pentaho/js/location.js"></script>
+	<script type="text/javascript" src="js/prb.js"></script>
+	<script type="text/javascript" src="/pentaho/js/oop.js"></script>
+	<script type="text/javascript" src="/pentaho/js/app.js"></script>
+	<script type="text/javascript" src="/pentaho/js/cda.js"></script>
+	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="../../pentaho-cdf/js/Base.js"></script> 
+	<script type="text/javascript" src="../../pentaho-cdf/js/jquery.blockUI.js"></script> 
+	<script type="text/javascript" src="../../pentaho-cdf/js/Dashboards.js"></script> 
+	<script type="text/javascript" src="../../pentaho-cdf/js/CoreComponents.js"></script> 
+	<script type="text/javascript">
+		pentaho.prbapp = new pentaho.app();
+
+		pentaho.prbapp.register('prb-location', pentaho.prb.Location);
+		pentaho.prbapp.register('prb-state-manager', pentaho.prb.StateManager)
+		
+		pentaho.prbapp.start('prb-state-manager')
+		pentaho.prbapp.start('prb-location', {});
+
+		var region="test";
+
+			var regionSelector = 
+			{
+			  name: "regionSelector",
+			  type: "select",
+			  parameters:[],
+			  parameter:"region",
+			valuesArray:[
+			  ["1","Shipped"],
+			  ["2","Cancelled"],
+			  ["3","In Process"]
+			],
+			valueAsId: true,
+			  htmlObject: "object_select",
+			  executeAtStart: true,
+			  preExecution:function(){},
+			  postExecution:function(){Dashboards.processChange(this.name);}
+			}
+		var titleString = 
+		{
+		  name: "regionVarianceBarChart",
+		  type: "text",
+		  listeners:["region"],
+		  htmlObject: "object_text",
+		  executeAtStart: true,
+		  expression: function(){return 'Chosen region: ' + region},
+		  preExecution:function(){},
+		  postExecution:function(){}
+		}
+			
+		  var table =
+			{
+			name: "topTenCustomers",
+			type: "tableComponent",
+			chartDefinition:   {
+			  colHeaders: ["Status","Year", "Price", "PriceInK"],
+			  colTypes: ['string','numeric', 'numeric', 'numeric'],
+			  colFormats: [null,'%.0f', null, null],
+			  colWidths: ['100px','100px', null, null],
+			  displayLength: 10,
+			  tableStyle: "classic",
+			  dataAccessId: 1,
+			  path: "bi-developers/cda/cdafiles/sql-jndi.cda"
+			},
+			listeners: ["region"],
+			parameters: [["status","region"]], // Valid for cdf 4 or higher
+			cdaParams: [["status","region"]],  // Valid on cdf 3.6
+			htmlObject: "queryResult",
+			executeAtStart: true
+		  };
+
+		  Dashboards.init([table, regionSelector, titleString]);		
+		/*
+		pentaho.prbapp.register('prb-table', pentaho.prb.Table);
+		pentaho.prbapp.register('prb-query', pentaho.prb.Query);
+		$(document).ready( function(){
+			pentaho.prbapp.start('prb-table', {element:"#queryResult"});
+			pentaho.prbapp.start('prb-query', {});
+			
+		});
+		*/
+	</script>
+</body>
+</html>

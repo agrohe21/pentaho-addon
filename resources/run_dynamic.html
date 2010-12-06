@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Pentaho Report Builder</title>
+    <style>body{visibility: visible;}</style>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/pentaho-style/favicon.ico" />
+    <!-- load the pentaho styling.  Try to use those if possible for consistency -->
+    <link rel="stylesheet" type="text/css" href="/pentaho-style/styles-new.css" />
+    <!-- load the mqlsample specific styling.  Make your changes there -->
+    <link rel="stylesheet" type="text/css" href="css/prb.css" />
+    <link rel="stylesheet" type="text/css" href="css/ui.all.css" />
+    <link rel="stylesheet" type="text/css" href="css/table_jqui.css" />
+
+</head>
+
+<body class="body">
+	<div id="report_title"></div>
+	<div id="report_prompt"></div>
+	<div id="content">
+		<div id="queryResult"></div>
+	<div>
+	<!--
+    <script type="text/javascript" src="/pentaho/js/pentaho-ajax.js"></script>
+    <script type="text/javascript" src="/pentaho/js/xhr.js"></script>
+    <script type="text/javascript" src="/pentaho/js/pmd.js"></script>
+    <script type="text/javascript" src="/pentaho/js/plugin.js"></script> 
+    <script type="text/javascript" src="/pentaho/js/prettyprint.js"></script>
+	<script type="text/javascript" src="/pentaho/js/cda.js"></script>
+	-->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.ui.js"></script>
+	<script type="text/javascript" src="/pentaho/js/location.js"></script>
+	<script type="text/javascript" src="/pentaho/js/oop.js"></script>
+	<script type="text/javascript" src="/pentaho/js/app.js"></script>
+	<script type="text/javascript" src="/pentaho/js/solrepo.js"></script>
+	<script type="text/javascript" src="/pentaho/js/cda.js"></script>
+	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="../../pentaho-cdf/js/Base.js"></script> 
+	<script type="text/javascript" src="../../pentaho-cdf/js/jquery.blockUI.js"></script> 
+	<script type="text/javascript" src="../../pentaho-cdf/js/Dashboards.js"></script> 
+	<script type="text/javascript" src="../../pentaho-cdf/js/CoreComponents.js"></script> 
+	<script type="text/javascript" src="js/prb.js"></script>
+	<script type="text/javascript">
+		pentaho.prbapp = new pentaho.app();
+
+		pentaho.prbapp.register('prb-location', pentaho.prb.Location);
+		pentaho.prbapp.register('prb-state-manager', pentaho.prb.StateManager)
+		pentaho.prbapp.register('prb-title', pentaho.prb.Text);
+		
+		pentaho.prbapp.register('prb-prompt-manager', pentaho.prb.PromptManager);
+		pentaho.prbapp.register('prb-table', pentaho.prb.Table);
+		pentaho.prbapp.register('prb-query', pentaho.prb.Query);
+		$(document).ready( function(){
+			pentaho.prbapp.start('prb-title', {element:"#report_title", title:"My Report Title"});
+			pentaho.prbapp.start('prb-table', {element:"#queryResult"});
+			pentaho.prbapp.start('prb-prompt-manager', {element:"#report_prompt"});
+			pentaho.prbapp.start('prb-query', {});
+			pentaho.prbapp.start('prb-state-manager')
+			pentaho.prbapp.start('prb-location', {});
+		});		
+	</script>
+</body>
+</html>

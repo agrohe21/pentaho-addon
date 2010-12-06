@@ -1,0 +1,96 @@
+		switch (command) {
+			case "new":
+				pentaho.xmql.mdModelSelect = new pentaho.prb.ModelSelector({element:$("#modelSelect")});
+				pentaho.xmql.mdModelSelect.onModelChange = function(selected) {
+					//console.log("model change");
+					pentaho.xmql.mdTable.clearResults();
+					pentaho.xmql.mdModel = pentaho.pmd.findModel(selected);
+					/* start creating query based on new model selected */
+					pentaho.xmql.mdQuery = new pentaho.pmd.Query({"domain":pentaho.xmql.mdModel.domain,"model":pentaho.xmql.mdModel.model});
+					pentaho.xmql.mdFldSelect = new pentaho.prb.FieldSelector({element:$("#viewResult")});
+					pentaho.xmql.mdFldSelect.onToggleSelect = function(table, column) {
+						//console.log("toggleSelect");
+						col = pentaho.xmql.mdModel.findColumn(table, column);
+						pentaho.xmql.mdQuery.toggleSelect(new pentaho.pmd.MDselect({"table":table, "column":column,"aggregation":"None"}));
+					}
+					pentaho.xmql.mdModel.discoverViews({
+						success:function(views) {
+							/* pass views to mdFldSelect module */
+							pentaho.xmql.mdFldSelect.loadFields(views);
+							/* create the filter dialog, but don't open just yet */
+							/* $('#filterDialog').dialog({ autoOpen: false, title:"Valid Values", height:300, maxHeight:500, buttons: { "Ok": function() { $(this).dialog("close"); } } }); */
+						}
+					});
+
+				}
+				pentaho.pmd.discoverModels({
+					success:function(models){
+						console.log("load models");
+						pentaho.xmql.mdModelSelect.loadModels(models);
+					}
+				});
+				pentaho.xmql.mdEditPane.toggleToolbar(true);
+				break;
+			case "edit":
+				pentaho.xmql.mdEditPane.toggleToolbar(true);
+				break;
+			case "load":
+				pentaho.xmql.mdEditPane.toggleToolbar(false);
+				break;
+			default:
+				pentaho.xmql.mdEditPane.toggleToolbar(true);
+		}
+
+		$("#bQuery").bind("click", pentaho.xmql.executeQuery);
+
+		/* create an instance of PentahoPlugin */
+		pentaho.xmql.plugin = new pentaho.Plugin("xmql");
+		var pluginOptions = {
+			pluginEditStart: function() {
+				pentaho.xmql.mdEditPane.toggleToolbar(true);
+			},
+			pluginEditComplete: function() {
+				pentaho.xmql.mdEditPane.toggleToolbar(false);
+			},
+		
+			/ * Handle PluginLoadStateComplete event pouring the saved state into a waiting MDQuery object */
+			pluginLoadStateComplete: function(state){
+				pentaho.xmql.mdModel = new pentaho.pmd.BusinessModel(
+					{"model":state.model.model,
+					"domain":state.model.domain,
+					"name":state.model.name,
+					"description":state.model.description,
+					views:state.model.views});
+				pentaho.xmql.mdQuery =  new pentaho.pmd.Query({
+					domain:pentaho.xmql.mdModel.domain,
+					model:pentaho.xmql.mdModel.model,
+					MDselect:state.query.MDselect,
+					MDorder:state.query.MDorder,
+					MDfilter:state.query.MDfilter});
+				//pentaho.xmql.viewLoadComplete();
+				pentaho.xmql.executeQuery(); //execute loaded query from saved state
+			}
+		};
+		//Call into with configured function handlers
+		pentaho.xmql.plugin.init(pluginOptions);
+		
+		/* overriding PentahoPlugin default to be used by PluginSaveSate */
+		pentaho.xmql.plugin.getCurrentPluginState = function() {
+			//console.log(pentaho.xmql.mdQuery.mdModel);
+			return {
+				//get the current state of the MDQuery objects to save
+				model : pentaho.xmql.mdModel,
+				query : pentaho.xmql.mdQuery
+			}
+		}
+		
+,
+	/* method called when a query is to be executed */
+	executeQuery: function() {
+		//console.log("executeQuery");
+		pentaho.xmql.mdQuery.execute({
+			success:function(results) {
+				pentaho.xmql.mdTable.loadResults(results, pentaho.xmql.mdQuery.MDselect);
+			}
+		}); //calls MDQuery.executeQuery, which on completion calls MDQqueryComplete
+	}
