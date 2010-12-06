@@ -39,8 +39,16 @@ EventTarget.prototype = {
         }            
     }
 };
+
+
+//= require "oop.js"
+
 /* define the pentaho namespace if it is not already defined. */
 var pentaho = pentaho || {};
+
+/*
+pentaho.app concept is taken from Nicholas Zakas, Scalable JavaScript Architecture
+*/
 
 pentaho.app = function(app){
 	EventTarget.call(this); //call parent object
@@ -49,13 +57,27 @@ pentaho.app = function(app){
 
 inheritPrototype(pentaho.app, EventTarget); //borrow the EventTarget's methods
 
-pentaho.app.prototype.register = function(moduleId, creator){
-	this.moduleData[moduleId] = {creator: creator, instance: null}
+pentaho.app.prototype.init = function(modArray) {
+
+	Dashboards.init();
+	
+	var module = {};
+	//register first then start
+	for (var i=0,j=modArray.length;i<j;i++) {
+		module = modArray[i];
+		this.register(module);
+		this.start(module);
+	}
+	
+}
+
+pentaho.app.prototype.register = function(module){
+	this.moduleData[module.name] = {creator: module.objectClass, instance: null}
 }  //end register
 
-pentaho.app.prototype.start = function(moduleId, params){
-	this.moduleData[moduleId].instance = new this.moduleData[moduleId].creator(this);
-	this.moduleData[moduleId].instance.init(params);
+pentaho.app.prototype.start = function(module){
+	this.moduleData[module.name].instance = new this.moduleData[module.name].creator(this);
+	this.moduleData[module.name].instance.init(module.element||{});
 }  //end start
 
 pentaho.app.prototype.stop = function(moduleId){
@@ -80,7 +102,3 @@ pentaho.app.prototype.stopAll = function(){
 		}
 	}
 }
-
-pentaho.app.prototype.say = function(message) {
-	this.notify({type: "message", message: message});
-};
