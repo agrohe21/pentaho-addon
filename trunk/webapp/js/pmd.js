@@ -60,7 +60,7 @@ pentaho.pmd = {
 		discoverModels: function(oConfig){
 			//If we already have some models in the class variable, return early with those values
 			if (pentaho.pmd.businessModels.length > 0) {
-				console.log("Using Existing Models");
+				//console.log("Using Existing Models");
 				oConfig.success(pentaho.pmd.businessModels);
 			}
 			else {
@@ -430,7 +430,7 @@ pentaho.pmd.Query.prototype = {
 				data:{
 					auditname:"xmql",  //this goes into the PRO_AUDIT table
 					solution :"system",
-					path     :"pmd-plugin",
+					path     :"DataAction",
 					action   :"mqlQuery.xaction",
 					resultset:"query_result",
 					domain   :this.domain,

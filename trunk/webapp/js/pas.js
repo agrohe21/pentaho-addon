@@ -73,7 +73,7 @@ pentaho.pas = {
 					} // end on error
 				}); // end xhr.execute
 			}  //end else length was zero
-		} // end getModels
+		} // end discoverCubes
 		  
 	}	//end pentaho.pas
 

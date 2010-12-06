@@ -72,6 +72,12 @@ pentaho.solRepo = {
 		this.description= obj.description;
 		this.parent     = parent;
 		this.type       = "action";
+		if (obj.solution) {
+			this.solution = obj.solution;
+		}
+		if (obj.path) {
+			this.path = obj.path;
+		}
 		//console.log("Created action: " + this.id + ":" + this.name + " under: " + this.parent);
 	},
 	/*
@@ -172,7 +178,11 @@ pentaho.solRepo = {
 }  // end solRepo Object Definition
 
 pentaho.solRepo.Action.prototype = {
+	
 	getSolution: function(){
+		if (this.solution) {
+			return this.solution;
+		}
 		var getParentPath = function(obj){
 			if (obj.parent.type == 'solution') {
 				//console.log("found solution: " + obj.parent.name);
@@ -185,6 +195,9 @@ pentaho.solRepo.Action.prototype = {
 		return getParentPath(this);
 	},
 	getPath: function(){
+		if (this.path) {
+			return this.path;
+		}
 		var path = [],
 		getParentPath = function(obj,path){
 			if (obj.parent.type == 'solution') {
@@ -227,7 +240,7 @@ pentaho.solRepo.Action.prototype = {
 			//pentaho.print(data);
 	
 			pentaho.xhr.execute("/pentaho/ServiceAction", {
-				asysnc:   true,
+				async:   true,
 				cache:    true,
 				dataType: "xml",
 				type:     "POST",
@@ -252,36 +265,29 @@ pentaho.solRepo.Action.prototype = {
 			});
 	}, // end execute
 	load: function(func) {
-		var that = this;
-		$.get({
-			url: '/persevere/xmql/',
-			data: {
-				solution :that.getSolution(),
-				path     :that.getPath(),
-				action   :that.id
-			}
+		var that =this;
+		pentaho.xhr.execute("/pentaho/content/cda/getCdaFile", {
+			async: true,
+			cache: true,
+			dataType: "json",
+			type: "GET",
+			complete: function(response) {
+				//console.log('solrepo.Action.load response');
+				var file = eval('(' + response + ')' );
+				if (typeof func == 'function'){
+					func(file);
+				}			
+			},
+			data:{path:that.getSolution() + that.getPath() +'/'+ that.id}
 		});
 	},
 	save: function(func) {
 		var that =this;
-			$.ajax({
-			  type: 'POST',
-			  url: '/persevere/xmql',
-			  data: $.toJSON({
-				solution :that.getSolution(),
-				path     :that.getPath(),
-				action   :that.id
-				}),
-			  success: function(data) {
-				if (typeof func == 'function') {
-					that.id = data.id.split("/")[1];
-					func(data);
-				}
-			},
-			dataType: 'json',
-            contentType: 'application/json; charset=utf-8',
-			  processData:'false'
+		/*
+		$.post("/pentaho/content/cda/writeCdaFile", data:{path:that.getSolution() + that.getPath() +'/'+ that.id},
+			function(data){
+				console.log('saved: ' + data);
 			});
-
+			*/
 	} //end save
 }

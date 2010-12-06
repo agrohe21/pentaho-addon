@@ -1,6 +1,8 @@
-/**
- * @author Andy
- */
+/*
+ @author Andrew Grohe
+*/
+
+var pentaho = pentaho || {};
 
 pentaho.location = {
 	app: "/" + window.location.pathname.split( '/' )[1],
@@ -19,6 +21,7 @@ pentaho.location = {
 		    name = decodeURIComponent(item[0]);
 		    value = decodeURIComponent(item[1]);
 		    args[name] = value;
+			//console.log(value);
 		}
 		return args;
 	})() //end args

@@ -20,6 +20,7 @@ pentaho.xhr = {
 					var myxml = pentaho.xhr.parseXML(response);
 					oConfig.complete(myxml);
 			};
+			//this shoudl be done by default then send if it cant convert
 			//var response = pentahoGet(url, parms, func);
 			var response = pentahoGet(url, parms);
 			oConfig.complete(response);
